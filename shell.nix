@@ -7,9 +7,17 @@ let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/ni
     rustup cacert curl which cmake
     git tmux ncurses postgresql
     less cargo-sweep
+    jq
   ];
 
 in
 pkgs.mkShell {
   buildInputs = baseInputs ++ [unstable.yq-go];
+  shellHook = ''
+    cd ~/projects/risingwave
+    a() { ./risedev d; psql -h localhost -p 4566; }
+    k() { ./risedev k; }
+    rl() { ./risedev l; }
+    cl() { ./risedev clean-data; }
+  '';
 }
