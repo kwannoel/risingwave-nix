@@ -7,7 +7,8 @@ let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/ni
     rustup cacert curl which cmake
     git tmux ncurses postgresql
     less cargo-sweep
-    jq
+    cargo-make
+    lld
   ];
 
 in
