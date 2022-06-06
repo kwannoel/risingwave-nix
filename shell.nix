@@ -28,7 +28,11 @@ let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/ni
 in
 pkgs.mkShell {
   buildInputs = baseInputs ++ [unstable.yq-go];
-  shellHook = ''
+  # See how openssl is configured: https://docs.rs/openssl/latest/openssl/
+  # We don't go through pkg-config when linking dynamically
+  # so we need to use LD_LIBRARY_PATH, since ld checks that for dyn linking.
+  shellHook = with pkgs; ''
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib
     cd ~/projects/risingwave
     a() { ./risedev d; psql -h localhost -p 4566; }
     k() { ./risedev k; }
