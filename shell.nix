@@ -33,7 +33,7 @@ pkgs.mkShell {
   # We don't go through pkg-config when linking dynamically
   # so we need to use LD_LIBRARY_PATH, since ld checks that for dyn linking.
   shellHook = with pkgs; ''
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib:${curl.out}/lib
     cd ~/projects/risingwave
     a() { ./risedev d; psql -h localhost -p 4566; }
     k() { ./risedev k; }
