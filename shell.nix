@@ -1,5 +1,6 @@
-{ pkgs ? import <nixpkgs> {} }:
+# nix-shell --pure ../risingwave-nix/shell.nix
 
+{ pkgs ? import <nixpkgs> {} }:
 
 let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) {};
     baseInputs = with pkgs; [
@@ -58,6 +59,7 @@ pkgs.mkShell {
             ./risedev clean-data; \
           }
     w() { cargo watch; }
+    wa() { cargo watch -x 'check --all-targets'; }
     cr() { cargo sweep --toolchains="nightly"; }
   '';
 }
