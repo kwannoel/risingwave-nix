@@ -72,5 +72,9 @@ pkgs.mkShell {
     cr() { cargo sweep --toolchains="nightly"; }
     fmt() { ./risedev c; }
     clippy() { cargo clippy --workspace --all-targets --fix --allow-dirty; }
+    sse2e() { ./risedev d; \
+              ./target/debug/sqlsmith test --testdata ./src/tests/sqlsmith/tests/testdata; \
+              ./risedev k; \
+            }
   '';
 }
