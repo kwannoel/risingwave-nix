@@ -1,9 +1,9 @@
 # nix-shell --pure ../risingwave-nix/shell.nix
 
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixos> {} }:
 
-let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) {};
-    baseInputs = with pkgs; [
+# let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) {};
+let baseInputs = with pkgs; [
     # std
     pkg-config openssl
 
@@ -16,6 +16,7 @@ let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/ni
     lld
     which
     less
+    yq-go
 
     # rust
     rustup
@@ -23,18 +24,21 @@ let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/ni
     cargo-sweep
 
     # tools
+    nix
     ripgrep
     gdb
     ps
+    shellcheck
   ];
 
 in
 pkgs.mkShell {
-  buildInputs = baseInputs ++ [unstable.yq-go];
+  buildInputs = baseInputs; # ++ [unstable.yq-go];
   # See how openssl is configured: https://docs.rs/openssl/latest/openssl/
   # We don't go through pkg-config when linking dynamically
   # so we need to use LD_LIBRARY_PATH, since ld checks that for dyn linking.
   shellHook = with pkgs; ''
+    export RUSTFLAGS="--cfg tokio_unstable"
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib:${curl.out}/lib
     cd ~/projects/risingwave
     a() { ./risedev d; \
@@ -72,9 +76,9 @@ pkgs.mkShell {
     cr() { cargo sweep --toolchains="nightly"; }
     fmt() { ./risedev c; }
     clippy() { cargo clippy --workspace --all-targets --fix --allow-dirty; }
-    sse2e() { ./risedev d; \
+    sse2e() { cargo build; \
+              ./risedev d; \
               ./target/debug/sqlsmith test --testdata ./src/tests/sqlsmith/tests/testdata; \
-              ./risedev k; \
             }
   '';
 }
