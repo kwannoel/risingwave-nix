@@ -29,6 +29,7 @@ let baseInputs = with pkgs; [
     gdb
     ps
     shellcheck
+    postgresql
   ];
 
 in
@@ -72,7 +73,7 @@ pkgs.mkShell {
             ./risedev clean-data; \
           }
     w() { cargo watch; }
-    wa() { cargo watch -x 'check --all-targets'; }
+    wa() { cargo watch -x 'check --all-targets' --features enable_sqlsmith_unit_test; }
     cr() { cargo sweep --toolchains="nightly"; }
     fmt() { ./risedev c; }
     clippy() { cargo clippy --workspace --all-targets --fix --allow-dirty; }
@@ -80,5 +81,11 @@ pkgs.mkShell {
               ./risedev d; \
               ./target/debug/sqlsmith test --testdata ./src/tests/sqlsmith/tests/testdata; \
             }
+    pg() {
+        docker run --name basic-postgres --rm -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=abc -e PGDATA=/var/lib/postgresql/data/pgdata --mount type=tmpfs,destination=/var/lib/postgresql/data/ -p 5432:5432 -it postgres:14.1-alpine
+    }
+    pgc() {
+        psql -h localhost -p 5432 -U postgres
+    }
   '';
 }
