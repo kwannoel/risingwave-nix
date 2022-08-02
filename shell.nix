@@ -3,7 +3,10 @@
 { pkgs ? import <nixos> {} }:
 
 # let unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) {};
-let baseInputs = with pkgs; [
+with pkgs;
+let myPythonPkgs = python-packages: with python-packages; [ pglast ];
+    myPython = python3.withPackages myPythonPkgs;
+    baseInputs = [
     # std
     pkg-config openssl
 
@@ -25,6 +28,7 @@ let baseInputs = with pkgs; [
 
     # tools
     nix
+    myPython # view postgres parser output
     ripgrep
     gdb
     ps
