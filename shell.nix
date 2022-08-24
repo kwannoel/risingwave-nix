@@ -91,5 +91,17 @@ pkgs.mkShell {
     pgc() {
         psql -h localhost -p 5432 -U postgres
     }
+    ssf() {
+        ./risedev test run_sqlsmith_on_frontend_0 --features enable_sqlsmith_unit_test
+    }
+    ssff() {
+        ./risedev test -E "package(risingwave_sqlsmith)" --features enable_sqlsmith_unit_test
+    }
+    tw() {
+        ./risedev d; \
+        ./risedev slt -p 4566 -d dev -u root -j 1 './e2e_test/streaming/time_window.slt'; \
+        ./risedev k; \
+        ./risedev clean-data; \
+    }
   '';
 }
