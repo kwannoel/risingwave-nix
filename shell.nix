@@ -34,6 +34,9 @@ let myPythonPkgs = python-packages: with python-packages; [ pglast ];
     ps
     shellcheck
     postgresql
+
+    # dashboard
+    nodejs
   ];
 
 in
