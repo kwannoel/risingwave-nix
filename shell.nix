@@ -46,6 +46,9 @@ pkgs.mkShell {
   # We don't go through pkg-config when linking dynamically
   # so we need to use LD_LIBRARY_PATH, since ld checks that for dyn linking.
   shellHook = with pkgs; ''
-      source env.sh
+      export RUSTFLAGS="--cfg tokio_unstable"
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib:${curl.out}/lib
+      cd ~/projects/risingwave
+      source functions.sh
   '';
 }

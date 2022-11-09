@@ -1,8 +1,11 @@
-  export RUSTFLAGS="--cfg tokio_unstable"
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib:${curl.out}/lib
-  cd ~/projects/risingwave
+
   a() { ./risedev d; \
         psql -h localhost -p 4566 -d dev -U root;
+      }
+  # run a single command in the data base
+  rc() {
+        ./risedev d; \
+        psql -h localhost -p 4566 -d dev -U root -c "$@"
       }
   k() { ./risedev k; }
   rl() { ./risedev l; }
@@ -51,10 +54,4 @@
   }
   ssff() {
       ./risedev test -E "package(risingwave_sqlsmith)" --features enable_sqlsmith_unit_test
-  }
-  tw() {
-      ./risedev d; \
-      ./risedev slt -p 4566 -d dev -u root -j 1 './e2e_test/streaming/time_window.slt'; \
-      ./risedev k; \
-      ./risedev clean-data; \
   }
