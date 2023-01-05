@@ -67,9 +67,13 @@
       ./risedev test -E "package(risingwave_sqlsmith)" --features enable_sqlsmith_unit_test
   }
 
-  sqlancer() {
+  cd_sqlancer() {
       cd sqlancer
       mvn package -DskipTests
       cd target
-      java -jar sqlancer-*.jar --num-threads 4 sqlite3 --oracle NoREC
+  }
+
+  sqlancer() {
+      ./risedev d;
+      java -jar sqlancer-*.jar --num-threads 4 --username root --port 4566 postgres --oracle NoREC
   }
