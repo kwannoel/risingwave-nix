@@ -1,7 +1,13 @@
+  d() {
+    ./risedev d;
+  }
 
-  a() { ./risedev d; \
-        psql -h localhost -p 4566 -d dev -U root;
+  a() {
+    psql -h localhost -p 4566 -d dev -U root;
       }
+  f() {
+    psql -h localhost -p 4566 -d dev -U root -f "$@"
+  }
   # run a single command in the data base
   rc() {
         ./risedev d; \
@@ -15,6 +21,11 @@
   fa() { ./risedev do-apply-planner-test; }
   e2ebasic() { ./risedev d; \
           ./risedev slt -p 4566 -d dev -u root './e2e_test/streaming/basic.slt'; \
+          ./risedev k; \
+          ./risedev clean-data; \
+        }
+  e2ef() { ./risedev d; \
+          ./risedev slt -p 4566 -d dev -u root "$@"; \
           ./risedev k; \
           ./risedev clean-data; \
         }
@@ -54,4 +65,11 @@
   }
   ssff() {
       ./risedev test -E "package(risingwave_sqlsmith)" --features enable_sqlsmith_unit_test
+  }
+
+  sqlancer() {
+      cd sqlancer
+      mvn package -DskipTests
+      cd target
+      java -jar sqlancer-*.jar --num-threads 4 sqlite3 --oracle NoREC
   }

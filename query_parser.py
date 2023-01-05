@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # USAGE: ./query_parser.py "select -1"
+# Setup:
 
 import sys
 from pprint import pprint
