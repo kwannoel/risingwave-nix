@@ -14,6 +14,7 @@ let myPythonPkgs = python-packages: with python-packages; [ pglast ];
     protobuf
     cacert curl cmake
     git tmux ncurses postgresql_14
+    cyrus_sasl
 
     # build
     lld
@@ -47,8 +48,8 @@ pkgs.mkShell {
   # so we need to use LD_LIBRARY_PATH, since ld checks that for dyn linking.
   shellHook = with pkgs; ''
       export RUSTFLAGS="--cfg tokio_unstable"
-      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${openssl.out}/lib:${curl.out}/lib
-      cd ~/projects/risingwave
+      export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${cyrus_sasl.out}/lib:${openssl.out}/lib:${curl.out}/lib
       source functions.sh
+      cd ~/projects/risingwave
   '';
 }
